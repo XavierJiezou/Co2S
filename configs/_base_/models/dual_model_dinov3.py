@@ -1,0 +1,51 @@
+norm_cfg = dict(type='SyncBN', requires_grad=True)
+img_size = 256
+
+model = dict(
+    type='Co2S',
+    backbone=dict(
+        type='DinoVisionTransformer',
+        img_size=img_size,
+        patch_size=16,
+        embed_dim=768,
+        drop_path_rate=0.0,
+        depth=12,
+        num_heads=12,
+        layerscale_init=1e-5,
+        norm_layer='layernorm',
+        ffn_layer='mlp',
+        ffn_bias=True,
+        proj_bias=True,
+        n_storage_tokens=4,
+        mask_k_bias=True,
+        pretrained='pretrained/dinov3_vitb16_pretrain_lvd1689m.pth',
+    ),
+    backbone_type="dinov3",
+    text_embedding=dict(
+        type='simple',
+        in_channels=768,
+        d_text=768,
+        normalize=True,
+        freeze=False
+    ),
+    decode_head=dict(
+        type='VLGHead',
+        img_size=img_size,
+        num_classes=6,
+        text_in_channels=768,
+        text_channels=128,
+        up_channels=(64, 32),
+        skip_in_channels=(768, 768),
+        skip_channels=(32, 16),
+        skip_from_conv_feat=False,
+        num_layers=2,
+        num_heads=4,
+        channels=128,
+        pool_size=(4, 4),
+        conv1_ksize=7,
+        align_corners=False,
+        loss_decode=None,
+    ),
+    freeze_backbone=True,
+    exclude_keys=['attn'],
+)
