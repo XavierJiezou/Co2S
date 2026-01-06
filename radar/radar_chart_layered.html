@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+                <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
+
+    
+</head>
+<body >
+    <div id="33b59e5e21b64901bbc9d6968c02f5eb" class="chart-container" style="width:100%; height:550px; "></div>
+    <script>
+        var chart_33b59e5e21b64901bbc9d6968c02f5eb = echarts.init(
+            document.getElementById('33b59e5e21b64901bbc9d6968c02f5eb'), 'white', {renderer: 'canvas', locale: 'ZH'});
+        var option_33b59e5e21b64901bbc9d6968c02f5eb = {
+    "backgroundColor": "white",
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "aria": {
+        "enabled": false
+    },
+    "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+    ],
+    "series": [
+        {
+            "type": "radar",
+            "name": "Co2S (Ours)",
+            "data": [
+                [
+                    62.2,
+                    62.7,
+                    79.9,
+                    75.4,
+                    60.9,
+                    56.8
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#6c5ce7"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 4,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.2
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "OnlySup",
+            "data": [
+                [
+                    58.0,
+                    56.6,
+                    70.2,
+                    67.5,
+                    53.6,
+                    52.7
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#00cec9"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "FixMatch (NeurIPS'20)",
+            "data": [
+                [
+                    59.8,
+                    60.1,
+                    73.5,
+                    70.0,
+                    56.8,
+                    53.7
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#fdcb6e"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "U2PL (CVPR'22)",
+            "data": [
+                [
+                    59.9,
+                    59.6,
+                    73.8,
+                    67.2,
+                    55.5,
+                    54.9
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#e17055"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "WSCL (TGRS'23)",
+            "data": [
+                [
+                    59.8,
+                    59.4,
+                    73.9,
+                    72.8,
+                    58.2,
+                    51.9
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#00b894"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "UniMatch (CVPR'23)",
+            "data": [
+                [
+                    60.4,
+                    60.0,
+                    74.8,
+                    73.9,
+                    57.9,
+                    56.0
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#e84393"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "DWL (ISPRS'24)",
+            "data": [
+                [
+                    57.1,
+                    62.8,
+                    79.8,
+                    72.6,
+                    59.0,
+                    54.5
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#0984e3"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "radar",
+            "name": "MUCA (TGRS'25)",
+            "data": [
+                [
+                    60.0,
+                    60.2,
+                    76.0,
+                    67.4,
+                    52.4,
+                    52.6
+                ]
+            ],
+            "symbol": "circle",
+            "label": {
+                "show": false,
+                "margin": 8,
+                "valueAnimation": false
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#d63031"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 2,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid"
+            },
+            "areaStyle": {
+                "opacity": 0.1
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "Co2S (Ours)",
+                "OnlySup",
+                "FixMatch (NeurIPS'20)",
+                "U2PL (CVPR'22)",
+                "WSCL (TGRS'23)",
+                "UniMatch (CVPR'23)",
+                "DWL (ISPRS'24)",
+                "MUCA (TGRS'25)"
+            ],
+            "selected": {},
+            "type": "scroll",
+            "show": true,
+            "left": "76%",
+            "top": "middle",
+            "orient": "vertical",
+            "padding": 5,
+            "itemGap": 15,
+            "itemWidth": 30,
+            "itemHeight": 16,
+            "textStyle": {
+                "color": "#2d3436",
+                "fontFamily": "Arial",
+                "fontSize": 16
+            },
+            "backgroundColor": "transparent",
+            "borderColor": "#ccc",
+            "borderRadius": 0,
+            "pageButtonItemGap": 5,
+            "pageButtonPosition": "end",
+            "pageFormatter": "{current}/{total}",
+            "pageIconColor": "#2f4554",
+            "pageIconInactiveColor": "#aaa",
+            "pageIconSize": 15,
+            "animationDurationUpdate": 800,
+            "selector": false,
+            "selectorPosition": "auto",
+            "selectorItemGap": 7,
+            "selectorButtonGap": 10
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "enterable": false,
+        "confine": false,
+        "appendToBody": false,
+        "transitionDuration": 0.4,
+        "formatter": function(params) {var n=['WHDLD','LoveDA','Potsdam','GID-15','MSL','MER'];var h='<div style=\"font-size:14px;color:#333;font-weight:bold;margin-bottom:5px\">'+params.name+'</div>';h+='<table style=\"width:100%;font-size:13px;color:#666;\">';for(var i=0;i<params.value.length;i++){var v=params.value[i].toFixed(1);h+='<tr>';h+='<td style=\"padding:2px 5px;\"><span style=\"display:inline-block;width:8px;height:8px;border-radius:50%;background-color:'+params.color+'\"></span></td>';h+='<td style=\"padding:2px 5px;\">'+n[i]+'</td>';h+='<td style=\"padding:2px 5px;text-align:right;font-weight:bold;color:#333;\">'+v+'</td>';h+='</tr>';}h+='</table>';return h;},
+        "textStyle": {
+            "color": "#333"
+        },
+        "backgroundColor": "rgba(255, 255, 255, 0.95)",
+        "borderColor": "#eee",
+        "borderWidth": 1,
+        "padding": 5,
+        "order": "seriesAsc"
+    },
+    "radar": [
+        {
+            "indicator": [
+                {
+                    "name": "WHDLD",
+                    "max": 63,
+                    "min": 45
+                },
+                {
+                    "name": "LoveDA",
+                    "max": 64,
+                    "min": 45
+                },
+                {
+                    "name": "Potsdam",
+                    "max": 81,
+                    "min": 45
+                },
+                {
+                    "name": "GID-15",
+                    "max": 77,
+                    "min": 45
+                },
+                {
+                    "name": "MSL",
+                    "max": 62,
+                    "min": 45
+                },
+                {
+                    "name": "MER",
+                    "max": 58,
+                    "min": 45
+                }
+            ],
+            "shape": "polygon",
+            "center": [
+                "42%",
+                "50%"
+            ],
+            "radius": "80%",
+            "startAngle": 90,
+            "name": {
+                "textStyle": {
+                    "color": "#2d3436",
+                    "fontWeight": "bold",
+                    "fontSize": 14
+                }
+            },
+            "splitLine": {
+                "show": true,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "#dcdcdc"
+                }
+            },
+            "splitArea": {
+                "show": true,
+                "areaStyle": {
+                    "opacity": 1,
+                    "color": [
+                        "#ffffff",
+                        "#f9f9f9"
+                    ]
+                }
+            },
+            "axisLine": {
+                "show": true,
+                "onZero": true,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "#b0b0b0"
+                }
+            }
+        }
+    ],
+    "title": [
+        {
+            "show": true,
+            "target": "blank",
+            "subtarget": "blank",
+            "padding": 5,
+            "itemGap": 10,
+            "textAlign": "auto",
+            "textVerticalAlign": "auto",
+            "triggerEvent": false
+        }
+    ]
+};
+        chart_33b59e5e21b64901bbc9d6968c02f5eb.setOption(option_33b59e5e21b64901bbc9d6968c02f5eb);
+            window.addEventListener('resize', function(){
+                chart_33b59e5e21b64901bbc9d6968c02f5eb.resize();
+            })
+    </script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+:root {
+    --primary-color: #202124;
+    --link-color: #1a73e8;
+    --bg-color: #ffffff;
+    --gray-bg: #f8f9fa;
+    --max-width: 960px;
+}
+
+body {
+    font-family: 'Google Sans', sans-serif;
+    color: var(--primary-color);
+    background-color: var(--bg-color);
+    line-height: 1.75;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth; /* 使得点击链接跳转时有平滑滚动效果 */
+}
+
+/* --- 阅读进度条 --- */
+#progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 2000;
+}
+
+#progress-bar {
+    height: 100%;
+    background: #1a73e8;
+    width: 0%;
+    transition: width 0.1s;
+}
+
+/* --- 右侧悬浮导航 --- */
+.floating-nav {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.floating-nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    color: #5f6368;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.floating-nav a:hover {
+    background-color: #1a73e8;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* --- Layout & Typography --- */
+.container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section {
+    padding: 50px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+h1.title {
+    font-family: 'Google Sans', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.title-black {
+    color: #000000 !important;
+}
+
+h2 {
+    font-family: 'Google Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-top: 0;
+    color: #202124;
+}
+
+/* 修复：通用的文本内容样式，不限制宽度，两端对齐 */
+.text-content {
+    text-align: justify; 
+    color: #3c4043;
+    margin: 0 auto;
+    width: 100%; /* 占满容器 */
+}
+
+.figure-header {
+    text-align: left;
+    font-family: 'Google Sans', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #202124;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    padding-left: 5px;
+}
+
+/* --- Buttons --- */
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover { text-decoration: underline; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #363636;
+    color: #fff !important;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: background-color 0.2s;
+}
+
+.btn:hover { background-color: #4a4a4a; }
+
+/* --- Images & Lightbox --- */
+.img-container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.img-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* 放大镜效果 */
+.zoom-trigger {
+    cursor: zoom-in;
+    transition: opacity 0.2s;
+}
+.zoom-trigger:hover {
+    opacity: 0.9;
+}
+
+/* 灯箱遮罩层 */
+#lightbox-modal {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+    backdrop-filter: blur(5px);
+}
+
+#lightbox-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 4px;
+    animation: zoomIn 0.3s;
+}
+
+#lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+#lightbox-close:hover {
+    color: #bbb;
+}
+
+@keyframes zoomIn {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* --- BibTeX --- */
+bibtex {
+    display: block;
+    background-color: #f1f3f4;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    color: #3c4043;
+    border-left: 4px solid #1a73e8;
+    white-space: pre-wrap;
+    position: relative;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: #5f6368;
+    transition: all 0.2s;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.copy-btn:hover {
+    background-color: #f1f3f4;
+    color: #202124;
+    border-color: #5f6368;
+}
+
+/* --- Carousel --- */
+.carousel-section {
+    background-color: var(--gray-bg);
+    padding: 40px 0;
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 900px;
+    /* 固定容器高度，确保所有切换页面看起来一样高 */
+    height: 600px; 
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+    height: 100%; /* 继承容器高度 */
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%; /* 撑满高度 */
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 内容垂直居中 */
+}
+
+/* 图片容器，用于控制点击区域和布局 */
+.carousel-slide .zoom-trigger {
+    width: 100%;
+    height: 90%; /* 给文字留出10%的空间 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-slide img {
+    /* 核心修改：同时限制最大宽和高，用 contain 模式 */
+    max-width: 100%;
+    max-height: 100%; 
+    width: auto;
+    height: auto;
+    object-fit: contain; 
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.carousel-caption {
+    margin-top: 10px;
+    height: 10%; /* 固定标题区域高度 */
+    font-family: 'Google Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #202124;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: background 0.3s ease;
+}
+
+.carousel-btn:hover { background: rgba(0, 0, 0, 0.7); }
+.carousel-btn.prev { left: 15px; }
+.carousel-btn.next { right: 15px; }
+
+.carousel-dots {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.dot {
+    cursor: pointer;
+    height: 10px;
+    width: 10px;
+    margin: 0 6px;
+    background-color: #dadce0;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* 加阴影防止在白色背景看不清 */
+}
+
+.dot.active, .dot:hover { background-color: #1a73e8; }
+
+/* --- Footer --- */
+.footer {
+    background-color: var(--gray-bg);
+    padding: 60px 0 40px;
+    margin-top: 60px;
+    border-top: 1px solid #e8eaed;
+    color: #5f6368;
+    font-size: 0.9rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.footer-col { flex: 1; min-width: 250px; }
+
+.footer-title {
+    font-family: 'Google Sans', sans-serif;
+    font-weight: 600;
+    color: #202124;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.footer-link { color: #1a73e8; text-decoration: none; }
+.footer-link:hover { text-decoration: underline; }
+
+/* --- Author & Affiliation Styles --- */
+
+.author-block {
+    margin-top: 25px;
+    font-size: 1.25rem; /* 调整字体大小以匹配图片 */
+    line-height: 1.6;
+}
+
+.author-name {
+    display: inline-block;
+    margin: 0 12px; /* 名字之间的间距 */
+}
+
+/* 名字的颜色样式 - 匹配图中的 Royal Blue */
+.author-name a {
+    color: #4169E1; /* Royal Blue */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.author-name a:hover {
+    text-decoration: underline;
+    color: #2b4bb5;
+}
+
+/* 上标样式调整 */
+.author-name sup {
+    color: #4169E1;
+    font-weight: 500;
+    margin-left: 1px;
+}
+
+/* 机构部分样式 */
+.affiliations {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #4a4a4a; /* 机构颜色通常比名字深一点或者灰一点 */
+}
+
+.affil-item {
+    margin: 0 15px;
+    display: inline-block;
+}
+
+.affil-item sup {
+    margin-right: 4px;
+}
+
+/* 如果屏幕较窄，让名字换行更自然 */
+@media (max-width: 768px) {
+    .author-name {
+        margin: 0 8px;
+        font-size: 1.1rem;
+    }
+    
+    .affil-item {
+        display: block; /* 手机端一行显示一个机构 */
+        margin: 5px 0;
+    }
+}
+
+/* --- Table Styles --- */
+.table-wrapper {
+    overflow-x: auto; /* 允许小屏幕横向滚动 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px; /* 圆角 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-top: 15px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Google Sans', sans-serif;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+}
+
+.results-table th {
+    background-color: #f8f9fa; /* 表头浅灰背景 */
+    color: #202124;
+    font-weight: 600;
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.results-table td {
+    padding: 16px;
+    color: #5f6368;
+    text-align: center;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+/* 最后一行高亮样式 */
+.results-table tr.highlight-row {
+    background-color: #e8f0fe; /* 浅蓝色背景 */
+}
+
+.results-table tr.highlight-row td {
+    color: #d93025; /* 红色字体 */
+    font-weight: 700; /* 加粗 */
+    border-bottom: none;
+}
+
+/* 单独把第一列(Method名)的颜色设深一点，不设红色，除非你希望整行都红 */
+.results-table tr.highlight-row td:first-child {
+    color: #202124; 
+    font-weight: 700;
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+    .results-table th, .results-table td {
+        padding: 10px 5px;
+        font-size: 0.85rem;
+    }
+}
+
+/* --- Tabs System Styles --- */
+.tabs-header-wrapper {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* 主数据集 Tabs */
+.main-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    background-color: #f1f3f4;
+    border: none;
+    border-radius: 4px; /* 方角或稍微圆角，区别于子Tab */
+    font-family: 'Google Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: #e8eaed;
+    color: #202124;
+}
+
+.tab-btn.active {
+    background-color: #202124; /* 黑色背景 */
+    color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 子比例 Tabs (1/8, 1/4 等) */
+.sub-tab-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    margin-top: -10px; /* 拉近与主Tab的距离 */
+}
+
+.sub-tab-btn {
+    padding: 6px 16px;
+    background-color: transparent;
+    border: 1px solid #dadce0;
+    border-radius: 20px; /* 胶囊状 */
+    font-size: 0.85rem;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sub-tab-btn:hover {
+    border-color: #202124;
+    color: #202124;
+}
+
+.sub-tab-btn.active {
+    background-color: #e8f0fe; /* 浅蓝色背景 */
+    border-color: #1a73e8;
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+/* 内容显示/隐藏逻辑 */
+.dataset-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.dataset-content.active {
+    display: block;
+}
+
+.sub-tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.sub-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 表格通用样式 */
+.table-wrapper {
+    overflow-x: auto; /* 关键：允许表格横向滚动 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Roboto Mono', monospace; /* 数字用等宽字体更好看 */
+    font-size: 0.85rem;
+    min-width: 600px; /* 防止在手机上过度挤压，强制出现滚动条 */
+}
+
+.results-table th, .results-table td {
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.results-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #202124;
+    font-family: 'Google Sans', sans-serif; /* 表头切回非衬线字体 */
+}
+
+.results-table td:first-child, .results-table th:first-child {
+    text-align: left;
+    padding-left: 15px;
+    font-weight: 500;
+    position: sticky; /* 可选：固定第一列 */
+    left: 0;
+    background-color: inherit; /* 继承行的背景色 */
+}
+
+/* 高亮行 */
+.highlight-row {
+    background-color: #f0f8ff; /* 浅蓝背景 */
+}
+
+.highlight-row td {
+    color: #d93025; /* 红色高亮数字 */
+    font-weight: 700;
+}
+.highlight-row td:first-child {
+    color: #202124; /* 方法名保持黑色 */
+}
+
+/* 移动端优化 */
+@media (max-width: 600px) {
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    .results-table {
+        font-size: 0.75rem; 
+    }
+    .results-table th, .results-table td {
+        padding: 8px 4px;
+    }
+}

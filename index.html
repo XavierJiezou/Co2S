@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co2S: Stable Semi-Supervised Remote Sensing Segmentation</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Roboto+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- 内部样式：用于 Tab 切换和特定的表格样式 -->
+    <style>
+        /* Tab 容器样式 */
+        .tabs-container {
+            width: 100%;
+            max-width: 1000px; /* 限制最大宽度，防止表格在大屏太宽 */
+            margin: 0 auto;
+        }
+
+        /* 按钮区域 */
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 按钮样式 */
+        .tab-btn {
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 0.95rem;
+            color: #5f6368;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            background-color: #e8eaed;
+            color: #202124;
+        }
+
+        /* 激活状态的按钮 */
+        .tab-btn.active {
+            background-color: #363636; /* 深色主题色 */
+            color: #fff;
+            border-color: #363636;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 内容区域 */
+        .tab-content {
+            display: none; /* 默认隐藏 */
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block; /* 激活时显示 */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 表格微调 */
+        .results-table th, .results-table td {
+            font-size: 0.85rem; /* 稍微调小字体以适应更多数据 */
+            padding: 10px 6px;
+        }
+        
+        /* 强制表头不换行 */
+        .results-table th {
+            white-space: nowrap;
+        }
+
+        /* 高亮行背景 */
+        .highlight-row {
+            background-color: #f0f8ff; /* 淡蓝色背景突出 Ours */
+            font-weight: bold;
+        }
+
+        /* 数据对其 */
+        .results-table td {
+            text-align: center;
+        }
+        .results-table td:first-child, .results-table th:first-child {
+            text-align: left; /* 第一列左对齐 */
+        }
+
+        /* 图片说明 */
+        .tab-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 1. 阅读进度条 -->
+<div id="progress-container">
+    <div id="progress-bar"></div>
+</div>
+
+<!-- 2. 右侧悬浮导航 -->
+<div class="floating-nav">
+    <a href="#home" title="Home"><i class="fas fa-home"></i></a>
+    <a href="#abstract" title="Abstract"><i class="fas fa-align-left"></i></a>
+    <a href="#methodology" title="Methodology"><i class="fas fa-cogs"></i></a>
+    <a href="#results" title="Results"><i class="fas fa-images"></i></a>
+    <a href="#citation" title="Citation"><i class="fas fa-quote-right"></i></a>
+</div>
+
+<div class="container" id="home">
+
+    <!-- Hero Section -->
+    <div class="section" style="padding-bottom: 20px;">
+        <div style="text-align: center;">
+            <h1 class="title title-black">
+                Toward Stable Semi-Supervised Remote Sensing<br>Segmentation via Co-Guidance and Co-Fusion
+            </h1>
+            
+            <!-- 作者部分 -->
+            <div class="author-block">
+                <span class="author-name"><a href="https://github.com/Zhou1Yi">Yi Zhou</a><sup>1,*</sup></span>
+                <span class="author-name"><a href="https://scholar.google.com/citations?user=po1KXtwAAAAJ&hl=en">Xuechao Zou</a><sup>2,*</sup></span>
+                <span class="author-name"><a href="https://scholar.google.com/citations?user=VIYETi4AAAAJ&hl=zh-CN">Shun Zhang</a><sup>2</sup></span>
+                <span class="author-name"><a href="https://scholar.google.com/citations?user=fHkHcMsAAAAJ&hl=en">Kai Li</a><sup>3</sup></span>
+                <span class="author-name"><a href="https://scholar.google.com/citations?user=cXins1kAAAAJ&hl=en">Shiying Wang</a><sup>1,†</sup></span>
+                <span class="author-name"><a href="https://github.com/huliAB2">Jingming Chen</a><sup>1</sup></span>
+                <br>
+                <span class="author-name"><a href="https://faculty.bjtu.edu.cn/7968/">Congyan Lang</a><sup>2</sup></span>
+                <span class="author-name"><a href="https://cs.qhu.edu.cn/jxgz/jxysz/szgk/21846.htm">Tengfei Cao</a><sup>1</sup></span>
+                <span class="author-name"><a href="https://www.cs.tsinghua.edu.cn/info/1117/3542.htm">Pin Tao</a><sup>1,3</sup></span>
+                <span class="author-name"><a href="https://www.cs.tsinghua.edu.cn/info/1116/3534.htm">Yuanchun Shi</a><sup>1,3</sup></span>
+            </div>
+        
+            <!-- 机构部分 -->
+            <div class="affiliations">
+                <span class="affil-item"><sup>1</sup>Qinghai University</span>
+                <span class="affil-item"><sup>2</sup>Beijing Jiaotong University</span>
+                <span class="affil-item"><sup>3</sup>Tsinghua University</span>
+            </div>
+
+            <!-- Links -->
+            <div class="link-buttons" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+                <a href="https://arxiv.org/pdf/2512.23035" target="_blank" class="btn"><i class="fas fa-file-pdf"></i> Paper</a>
+                <a href="https://github.com/XavierJiezou/co2s" target="_blank" class="btn"><i class="fab fa-github"></i> Code</a>
+                <a href="https://huggingface.co/datasets/XavierJiezou/co2s-datasets" target="_blank" class="btn"><i class="fas fa-database"></i> Data</a>
+                <a href="https://huggingface.co/XavierJiezou/co2s-models" target="_blank" class="btn"><i class="fas fa-layer-group"></i> Checkpoints</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图 1: Performance Overview (雷达图) -->
+    <div class="section">
+        <h3 class="figure-header" style="text-align: center;">Overall Results Comparison</h3>
+        <div class="img-container" style="height: 550px; width: 100%; overflow: hidden;">
+            <iframe src="radar/radar_chart_layered.html" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <!-- Abstract -->
+    <div class="section" id="abstract">
+        <h2 style="text-align: center; margin-bottom: 20px;">Abstract</h2>
+        <p class="text-content">
+            Semi-supervised remote sensing (RS) image semantic segmentation offers a promising solution to alleviate the burden of exhaustive annotation, yet it fundamentally struggles with pseudo-label drift, a phenomenon where confirmation bias leads to the accumulation of errors during training. In this work, we propose Co2S, a stable semi-supervised RS segmentation framework that synergistically fuses priors from vision-language models and self-supervised models. Specifically, we construct a heterogeneous dual-student architecture comprising two distinct ViT-based vision foundation models initialized with pretrained CLIP and DINOv3 to mitigate error accumulation and pseudo-label drift. To effectively incorporate these distinct priors, an explicit-implicit semantic co-guidance mechanism is introduced that utilizes text embeddings and learnable queries to provide explicit and implicit class-level guidance, respectively, thereby jointly enhancing semantic consistency. Furthermore, a global-local feature collaborative fusion strategy is developed to effectively fuse the global contextual information captured by CLIP with the local details produced by DINOv3, enabling the model to generate highly precise segmentation results. Extensive experiments on six popular datasets demonstrate the superiority of the proposed method, which consistently achieves leading performance across various partition protocols and diverse scenarios.
+        </p>
+    </div>
+
+    <!-- Methodology / Framework -->
+    <div class="section" id="methodology">
+        <h2 style="text-align: center; margin-bottom: 30px;">Methodology</h2>
+        <!-- <p class="text-content">
+            To address the instability in semi-supervised learning, we propose a <strong>Co-Fusion and Co-Guidance</strong> strategy. 
+            We construct an <strong>isomorphic yet hetero-parameter dual-student framework</strong>, in which two structurally identical ViT-B/16 models are initialized from different pretraining paradigms and are jointly optimized.
+        </p> -->
+
+        <!-- Framework Architecture Image -->
+        <!-- <h3 class="figure-header" style="text-align: center;">The Co2S Framework Architecture</h3> -->
+        <div class="img-container zoom-trigger">
+            <img src="static/image/Co2S.png" alt="Co2S Framework Overview" style="width: 100%; border-radius: 8px;">
+            <p style="text-align: center; font-size: 0.9rem; color: #5f6368; margin-top: 10px;">
+                Overview of the proposed Co2S framework. It integrates a CLIP-based student (top) using text embeddings for explicit semantic guidance and a DINOv3-based student (bottom) using learnable queries for implicit guidance. For unlabeled data, the global-local collaborative fusion strategy enforces training stability by arbitrating supervision based on pixel-wise confidence.
+             </p>
+        </div>
+
+        <div class="text-content" style="margin-top: 30px;">
+            <h3 class="figure-header" style="text-align: center;">Attention Visualization</h3>
+            <!-- <p>
+                The CLIP-based model emphasizes semantically salient regions driven by category-level cues, whereas
+                the DINOv3-based model produces more spatially distributed activations that capture structural and boundary-related details.
+                These complementary behaviors illustrate the distinct global and local characteristics leveraged by our Co2S framework.
+            </p> -->
+        </div>
+        
+        <!-- CLIP Image -->
+        <!-- 修改说明：将原来的 max-width: 600px 改为了 width: 100%，使其撑满容器与文字对齐 -->
+        <div class="img-container zoom-trigger" style="width: 100%; margin: 20px auto;">
+             <img src="static/image/atten.png" alt="CLIP Guidance Detail" style="width: 100%; border-radius: 8px;">
+             <p style="text-align: center; font-size: 0.9rem; color: #5f6368; margin-top: 10px;">
+                Visualization of attention maps from different heads of the CLIP image encoder (a-c) and DINOv3 backbone (d-f).
+             </p>
+        </div>
+    </div>
+
+<!-- ============================================== -->
+<!-- Experimental Results (UPDATED SECTION)     -->
+<!-- ============================================== -->
+<div class="section" id="quantitative-results">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 20px;">Experimental Results</h2>
+        <p style="text-align: center; margin-bottom: 30px; color: #666;">
+            Comparison with state-of-the-art methods across six datasets.<br>
+            <span style="font-size: 0.9rem;">(<b>Bold</b>: Best, <u>Underline</u>: Second Best)</span>
+        </p>
+
+        <!-- 第一层 Tab：选择数据集 -->
+        <div class="tabs-header-wrapper">
+            <div class="tab-buttons main-tabs">
+                <button class="tab-btn active" onclick="openDataset(event, 'whdld')">WHDLD</button>
+                <button class="tab-btn" onclick="openDataset(event, 'loveda')">LoveDA</button>
+                <button class="tab-btn" onclick="openDataset(event, 'potsdam')">Potsdam</button>
+                <button class="tab-btn" onclick="openDataset(event, 'mer')">MER</button>
+                <button class="tab-btn" onclick="openDataset(event, 'msl')">MSL</button>
+                <button class="tab-btn" onclick="openDataset(event, 'gid')">GID-15</button>
+            </div>
+        </div>
+
+        <!-- ================= Tab Content: WHDLD (Table I) ================= -->
+        <div id="whdld" class="dataset-content active">
+            <div class="tab-caption">Table I: Segmentation results (mIoU %) on WHDLD dataset.</div>
+            <div class="table-wrapper">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>1/24</th>
+                            <th>1/16</th>
+                            <th>1/8</th>
+                            <th>1/4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>OnlySup</td><td>53.6</td><td>55.2</td><td>58.0</td><td>60.5</td></tr>
+                        <tr><td>FixMatch</td><td>56.0</td><td>57.6</td><td>59.8</td><td>60.8</td></tr>
+                        <tr><td>U2PL</td><td>57.1</td><td>58.3</td><td>59.9</td><td>61.1</td></tr>
+                        <tr><td>WSCL</td><td>56.8</td><td>58.6</td><td>59.8</td><td>61.1</td></tr>
+                        <tr><td>UniMatch</td><td><u>57.4</u></td><td><u>58.8</u></td><td><u>60.4</u></td><td><u>61.5</u></td></tr>
+                        <tr><td>DWL</td><td>56.5</td><td>57.0</td><td>57.1</td><td>58.9</td></tr>
+                        <tr><td>MUCA</td><td>56.5</td><td>58.2</td><td>60.0</td><td>60.5</td></tr>
+                        <tr class="highlight-row">
+                            <td>Co2S (Ours)</td>
+                            <td><b>61.1</b></td>
+                            <td><b>61.5</b></td>
+                            <td><b>62.2</b></td>
+                            <td><b>62.6</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= Tab Content: LoveDA (Table II - 4 Sub-tables) ================= -->
+        <div id="loveda" class="dataset-content">
+            <!-- 第二层 Tab：选择比例 -->
+            <div class="sub-tab-buttons">
+                <button class="sub-tab-btn active" onclick="openSubTab(event, 'loveda-1-40')">1/40</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'loveda-1-16')">1/16</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'loveda-1-8')">1/8</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'loveda-1-4')">1/4</button>
+            </div>
+
+            <!-- LoveDA 1/40 -->
+            <div id="loveda-1-40" class="sub-tab-content active">
+                <div class="tab-caption">Table II: LoveDA (1/40 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th>Method</th><th>Backgr.</th><th>Build.</th><th>Road</th><th>Water</th><th>Barren</th><th>Forest</th><th>Agri.</th><th>mIoU</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>48.0</td><td>37.5</td><td>36.1</td><td>55.3</td><td>27.3</td><td>53.2</td><td>57.1</td><td>45.9</td></tr>
+                            <tr><td>FixMatch</td><td>50.3</td><td>52.1</td><td>53.3</td><td>69.9</td><td>28.7</td><td>56.4</td><td>62.3</td><td>53.3</td></tr>
+                            <tr><td>U2PL</td><td>47.4</td><td>47.5</td><td>50.9</td><td>69.8</td><td>30.0</td><td>56.5</td><td>63.8</td><td>52.3</td></tr>
+                            <tr><td>WSCL</td><td><b>52.9</b></td><td>52.1</td><td><b>62.8</b></td><td>68.1</td><td>31.2</td><td>57.7</td><td>63.8</td><td>54.1</td></tr>
+                            <tr><td>UniMatch</td><td><u>52.8</u></td><td>55.9</td><td>54.6</td><td>70.1</td><td>30.2</td><td><u>59.3</u></td><td><b>65.5</b></td><td>55.5</td></tr>
+                            <tr><td>DWL</td><td>50.4</td><td><u>57.8</u></td><td>57.7</td><td><u>75.7</u></td><td><b>36.4</b></td><td>58.5</td><td><u>65.1</u></td><td><u>57.4</u></td></tr>
+                            <tr><td>MUCA</td><td>49.2</td><td>50.8</td><td>51.0</td><td>73.5</td><td>33.9</td><td>58.9</td><td>64.7</td><td>54.6</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td>51.6</td><td><b>59.7</b></td><td><u>58.3</u></td><td><b>76.5</b></td><td><u>35.9</u></td><td><b>61.5</b></td><td>64.2</td><td><b>58.2</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- LoveDA 1/16 -->
+            <div id="loveda-1-16" class="sub-tab-content">
+                <div class="tab-caption">Table II: LoveDA (1/16 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead><tr><th>Method</th><th>Backgr.</th><th>Build.</th><th>Road</th><th>Water</th><th>Barren</th><th>Forest</th><th>Agri.</th><th>mIoU</th></tr></thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>50.8</td><td>51.0</td><td>49.5</td><td>65.9</td><td>33.5</td><td>57.1</td><td>63.6</td><td>53.1</td></tr>
+                            <tr><td>FixMatch</td><td><u>55.5</u></td><td>58.4</td><td>55.4</td><td>72.2</td><td>37.4</td><td>59.3</td><td>66.9</td><td>57.9</td></tr>
+                            <tr><td>U2PL</td><td>53.5</td><td>58.3</td><td>56.6</td><td>72.6</td><td><u>38.0</u></td><td>59.9</td><td>67.3</td><td>58.0</td></tr>
+                            <tr><td>WSCL</td><td>53.8</td><td>55.8</td><td>55.2</td><td>71.6</td><td>37.5</td><td>61.3</td><td>66.6</td><td>57.4</td></tr>
+                            <tr><td>UniMatch</td><td><b>55.7</b></td><td>59.2</td><td>57.0</td><td>72.4</td><td>37.7</td><td>60.9</td><td><u>67.6</u></td><td>58.6</td></tr>
+                            <tr><td>DWL</td><td>52.7</td><td><u>60.6</u></td><td><b>59.1</b></td><td>73.7</td><td>36.0</td><td><u>62.9</u></td><td><b>68.2</b></td><td><u>59.0</u></td></tr>
+                            <tr><td>MUCA</td><td>52.6</td><td>54.1</td><td>54.5</td><td><u>75.0</u></td><td>34.1</td><td>61.2</td><td>65.0</td><td>56.7</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td>54.0</td><td><b>62.2</b></td><td><u>59.0</u></td><td><b>76.3</b></td><td><b>40.0</b></td><td><b>63.6</b></td><td><u>67.6</u></td><td><b>60.4</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+             <!-- LoveDA 1/8 -->
+             <div id="loveda-1-8" class="sub-tab-content">
+                <div class="tab-caption">Table II: LoveDA (1/8 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead><tr><th>Method</th><th>Backgr.</th><th>Build.</th><th>Road</th><th>Water</th><th>Barren</th><th>Forest</th><th>Agri.</th><th>mIoU</th></tr></thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>52.8</td><td>56.4</td><td>53.4</td><td>69.8</td><td>38.0</td><td>59.7</td><td>66.2</td><td>56.6</td></tr>
+                            <tr><td>FixMatch</td><td>55.9</td><td>60.9</td><td>58.8</td><td>73.1</td><td>40.6</td><td>62.3</td><td><u>69.2</u></td><td>60.1</td></tr>
+                            <tr><td>U2PL</td><td>54.8</td><td>60.9</td><td>59.4</td><td>72.0</td><td>40.3</td><td>61.6</td><td>68.4</td><td>59.6</td></tr>
+                            <tr><td>WSCL</td><td>56.6</td><td>60.0</td><td>58.5</td><td>72.9</td><td>38.6</td><td>61.1</td><td>68.0</td><td>59.4</td></tr>
+                            <tr><td>UniMatch</td><td><u>56.8</u></td><td>61.1</td><td>59.6</td><td>73.3</td><td>39.4</td><td>61.7</td><td>68.3</td><td>60.0</td></tr>
+                            <tr><td>DWL</td><td>56.2</td><td><u>61.5</u></td><td><u>60.0</u></td><td><u>78.9</u></td><td><b>47.1</b></td><td><u>66.6</u></td><td><b>69.4</b></td><td><b>62.8</b></td></tr>
+                            <tr><td>MUCA</td><td>55.5</td><td>57.4</td><td>58.2</td><td>77.3</td><td>38.3</td><td>65.4</td><td><u>69.2</u></td><td>60.2</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td><b>57.2</b></td><td><b>63.8</b></td><td><b>60.4</b></td><td><b>79.3</b></td><td><u>42.3</u></td><td><b>66.7</b></td><td><u>69.2</u></td><td><u>62.7</u></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+             <!-- LoveDA 1/4 -->
+             <div id="loveda-1-4" class="sub-tab-content">
+                <div class="tab-caption">Table II: LoveDA (1/4 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead><tr><th>Method</th><th>Backgr.</th><th>Build.</th><th>Road</th><th>Water</th><th>Barren</th><th>Forest</th><th>Agri.</th><th>mIoU</th></tr></thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>55.7</td><td>58.8</td><td>57.9</td><td>72.8</td><td>42.3</td><td>53.2</td><td>68.5</td><td>58.9</td></tr>
+                            <tr><td>FixMatch</td><td>56.9</td><td><u>61.9</u></td><td>60.6</td><td>73.8</td><td>43.3</td><td>64.2</td><td>69.8</td><td>61.5</td></tr>
+                            <tr><td>U2PL</td><td>57.4</td><td>61.5</td><td>60.6</td><td>74.6</td><td>42.9</td><td>64.3</td><td>69.2</td><td>61.5</td></tr>
+                            <tr><td>WSCL</td><td><u>57.6</u></td><td>61.3</td><td>59.3</td><td>74.3</td><td>43.4</td><td>63.2</td><td>68.6</td><td>61.1</td></tr>
+                            <tr><td>UniMatch</td><td><b>58.0</b></td><td>61.1</td><td>60.8</td><td>74.2</td><td>44.6</td><td>63.5</td><td>69.8</td><td>61.7</td></tr>
+                            <tr><td>DWL</td><td>56.5</td><td>61.8</td><td>60.6</td><td><b>79.3</b></td><td>44.5</td><td><b>68.8</b></td><td><b>72.4</b></td><td><u>63.4</u></td></tr>
+                            <tr><td>MUCA</td><td>55.9</td><td>61.8</td><td><b>61.1</b></td><td>78.0</td><td><u>44.8</u></td><td><u>68.3</u></td><td><u>71.6</u></td><td>63.1</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td>57.0</td><td><b>63.4</b></td><td><u>61.0</u></td><td><u>79.1</u></td><td><b>48.3</b></td><td>67.8</td><td>71.2</td><td><b>64.0</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Tab Content: Potsdam (Table III) ================= -->
+        <div id="potsdam" class="dataset-content">
+            <div class="tab-caption">Table III: Segmentation results (mIoU %) on Potsdam dataset.</div>
+            <div class="table-wrapper">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th><th>1/32</th><th>1/16</th><th>1/8</th><th>1/4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>OnlySup</td><td>61.5</td><td>64.9</td><td>70.2</td><td>73.8</td></tr>
+                        <tr><td>FixMatch</td><td>69.4</td><td>71.5</td><td>73.5</td><td>75.7</td></tr>
+                        <tr><td>U2PL</td><td>67.2</td><td>71.3</td><td>73.3</td><td>75.9</td></tr>
+                        <tr><td>WSCL</td><td>69.9</td><td>72.3</td><td>73.9</td><td>75.4</td></tr>
+                        <tr><td>UniMatch</td><td>70.7</td><td>72.6</td><td>74.8</td><td>76.4</td></tr>
+                        <tr><td>DWL</td><td><u>74.2</u></td><td><b>78.3</b></td><td><b>79.8</b></td><td><b>80.3</b></td></tr>
+                        <tr><td>MUCA</td><td>66.9</td><td>71.5</td><td><u>76.0</u></td><td>79.2</td></tr>
+                        <tr class="highlight-row"><td>Co2S (Ours)</td><td><b>74.3</b></td><td><u>76.6</u></td><td><b>79.8</b></td><td><u>80.2</u></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= Tab Content: MER (Table IV - 2 Sub-tables) ================= -->
+        <div id="mer" class="dataset-content">
+            <div class="sub-tab-buttons">
+                <button class="sub-tab-btn active" onclick="openSubTab(event, 'mer-1-8')">1/8</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'mer-1-4')">1/4</button>
+            </div>
+
+            <!-- MER 1/8 -->
+            <div id="mer-1-8" class="sub-tab-content active">
+                <div class="tab-caption">Table IV: MER (1/8 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th>Method</th><th>Soil</th><th>Sands</th><th>Gravel</th><th>Bedrock</th><th>Rocks</th><th>Tracks</th><th>Shadows</th><th>Unk.</th><th>Bg.</th><th>mIoU</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>4.7</td><td>55.1</td><td>71.4</td><td>61.7</td><td>38.0</td><td>49.5</td><td>34.2</td><td>73.0</td><td>87.0</td><td>52.8</td></tr>
+                            <tr><td>FixMatch</td><td>2.0</td><td>53.6</td><td><u>73.5</u></td><td>65.8</td><td>40.0</td><td>54.8</td><td>31.5</td><td>72.4</td><td>90.4</td><td>53.8</td></tr>
+                            <tr><td>U2PL</td><td>5.2</td><td>51.8</td><td>73.2</td><td><b>70.5</b></td><td><b>45.7</b></td><td>54.6</td><td>26.2</td><td>73.8</td><td><b>93.2</b></td><td>54.9</td></tr>
+                            <tr><td>WSCL</td><td>3.5</td><td>54.8</td><td>69.9</td><td>62.8</td><td>36.0</td><td>56.9</td><td>26.1</td><td><u>76.0</u></td><td>80.9</td><td>51.9</td></tr>
+                            <tr><td>UniMatch</td><td><u>5.5</u></td><td>54.4</td><td>72.7</td><td><u>68.5</u></td><td><u>44.7</u></td><td>55.2</td><td><b>38.0</b></td><td>73.8</td><td>91.1</td><td><u>56.0</u></td></tr>
+                            <tr><td>DWL</td><td><b>5.9</b></td><td>51.0</td><td><b>74.9</b></td><td>67.2</td><td>41.4</td><td><u>61.9</u></td><td>28.3</td><td>69.7</td><td>90.4</td><td>54.5</td></tr>
+                            <tr><td>MUCA</td><td>5.3</td><td><u>56.0</u></td><td>72.6</td><td>60.5</td><td>36.1</td><td>52.9</td><td>34.5</td><td>67.7</td><td>87.8</td><td>52.6</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td>3.0</td><td><b>56.3</b></td><td>73.1</td><td>67.9</td><td>37.0</td><td><b>66.3</b></td><td><u>36.5</u></td><td><b>79.7</b></td><td><u>91.3</u></td><td><b>56.8</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- MER 1/4 -->
+            <div id="mer-1-4" class="sub-tab-content">
+                <div class="tab-caption">Table IV: MER (1/4 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th>Method</th><th>Soil</th><th>Sands</th><th>Gravel</th><th>Bedrock</th><th>Rocks</th><th>Tracks</th><th>Shadows</th><th>Unk.</th><th>Bg.</th><th>mIoU</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td><b>21.6</b></td><td>56.3</td><td><u>74.4</u></td><td>66.3</td><td>38.0</td><td>52.3</td><td>22.1</td><td>74.5</td><td><b>92.2</b></td><td>55.3</td></tr>
+                            <tr><td>FixMatch</td><td>19.4</td><td>55.4</td><td>74.0</td><td>57.1</td><td><u>43.6</u></td><td>57.3</td><td><u>39.8</u></td><td>75.7</td><td>90.9</td><td><u>58.1</u></td></tr>
+                            <tr><td>U2PL</td><td>7.1</td><td><u>56.4</u></td><td>73.7</td><td><u>69.7</u></td><td>41.9</td><td>60.8</td><td>23.3</td><td><b>81.4</b></td><td>90.3</td><td>56.1</td></tr>
+                            <tr><td>WSCL</td><td>8.2</td><td>52.8</td><td>71.1</td><td>65.5</td><td>35.7</td><td><u>61.0</u></td><td>31.4</td><td><u>79.0</u></td><td>89.0</td><td>54.9</td></tr>
+                            <tr><td>UniMatch</td><td><u>19.7</u></td><td>54.6</td><td>74.3</td><td>69.3</td><td><b>44.5</b></td><td>54.9</td><td>37.4</td><td>77.4</td><td>90.5</td><td><u>58.1</u></td></tr>
+                            <tr><td>DWL</td><td>13.8</td><td>55.9</td><td>74.8</td><td><b>70.3</b></td><td>36.2</td><td>57.9</td><td>28.8</td><td>66.0</td><td>89.7</td><td>54.7</td></tr>
+                            <tr><td>MUCA</td><td>1.0</td><td>55.1</td><td>73.8</td><td>65.6</td><td>38.4</td><td>56.3</td><td>28.6</td><td>73.7</td><td>84.9</td><td>53.0</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td>13.1</td><td><b>63.3</b></td><td><b>76.1</b></td><td>69.4</td><td>37.1</td><td><b>63.1</b></td><td><b>41.1</b></td><td>77.1</td><td><u>91.4</u></td><td><b>59.1</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Tab Content: MSL (Table V - 2 Sub-tables) ================= -->
+        <div id="msl" class="dataset-content">
+            <div class="sub-tab-buttons">
+                <button class="sub-tab-btn active" onclick="openSubTab(event, 'msl-1-8')">1/8</button>
+                <button class="sub-tab-btn" onclick="openSubTab(event, 'msl-1-4')">1/4</button>
+            </div>
+
+            <!-- MSL 1/8 -->
+            <div id="msl-1-8" class="sub-tab-content active">
+                <div class="tab-caption">Table V: MSL (1/8 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th>Method</th><th>Soil</th><th>Sands</th><th>Gravel</th><th>Bedrock</th><th>Rocks</th><th>Tracks</th><th>Shadows</th><th>Unk.</th><th>Bg.</th><th>mIoU</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>26.8</td><td>61.6</td><td>66.8</td><td>72.2</td><td>37.9</td><td>45.5</td><td>37.0</td><td>49.1</td><td>85.1</td><td>53.6</td></tr>
+                            <tr><td>FixMatch</td><td>31.0</td><td>65.4</td><td>69.6</td><td>75.0</td><td>40.4</td><td>49.6</td><td>39.8</td><td>54.2</td><td>86.5</td><td>56.8</td></tr>
+                            <tr><td>U2PL</td><td>26.7</td><td>64.7</td><td>70.3</td><td>73.3</td><td>39.8</td><td>43.1</td><td>40.3</td><td>53.1</td><td>87.7</td><td>55.5</td></tr>
+                            <tr><td>WSCL</td><td>25.8</td><td>65.0</td><td>68.3</td><td>73.9</td><td>38.8</td><td><b>69.6</b></td><td>39.6</td><td>57.0</td><td>86.0</td><td>58.2</td></tr>
+                            <tr><td>UniMatch</td><td>29.3</td><td><u>66.7</u></td><td>69.8</td><td><u>75.4</u></td><td>39.2</td><td>50.8</td><td>43.0</td><td><u>57.9</u></td><td>89.2</td><td>57.9</td></tr>
+                            <tr><td>DWL</td><td><b>33.5</b></td><td>65.9</td><td>71.2</td><td>74.7</td><td><b>44.7</b></td><td>48.8</td><td><b>44.8</b></td><td>56.3</td><td><b>90.9</b></td><td><u>59.0</u></td></tr>
+                            <tr><td>MUCA</td><td>15.4</td><td>63.9</td><td>67.0</td><td>71.5</td><td>43.1</td><td>41.0</td><td>41.0</td><td>55.9</td><td>82.9</td><td>52.4</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td><b>36.7</b></td><td><b>68.4</b></td><td><b>71.7</b></td><td><b>76.0</b></td><td><u>42.6</u></td><td><u>58.9</u></td><td><u>44.1</u></td><td><b>60.9</b></td><td>89.3</td><td><b>60.9</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MSL 1/4 -->
+            <div id="msl-1-4" class="sub-tab-content">
+                <div class="tab-caption">Table V: MSL (1/4 Labeled Images)</div>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th>Method</th><th>Soil</th><th>Sands</th><th>Gravel</th><th>Bedrock</th><th>Rocks</th><th>Tracks</th><th>Shadows</th><th>Unk.</th><th>Bg.</th><th>mIoU</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>OnlySup</td><td>32.2</td><td>65.0</td><td>69.0</td><td>75.1</td><td>43.6</td><td>57.6</td><td>44.0</td><td>57.9</td><td>86.6</td><td>59.0</td></tr>
+                            <tr><td>FixMatch</td><td>29.7</td><td>65.5</td><td>69.9</td><td><u>77.1</u></td><td>42.5</td><td>63.8</td><td>48.1</td><td>60.7</td><td>87.5</td><td>60.5</td></tr>
+                            <tr><td>U2PL</td><td><b>36.1</b></td><td>62.7</td><td><u>72.7</u></td><td>76.3</td><td>43.3</td><td>63.7</td><td>44.2</td><td>65.6</td><td>90.1</td><td>61.6</td></tr>
+                            <tr><td>WSCL</td><td>30.9</td><td>64.7</td><td>70.4</td><td>75.5</td><td>42.0</td><td>58.3</td><td>42.8</td><td>65.0</td><td>89.7</td><td>59.9</td></tr>
+                            <tr><td>UniMatch</td><td>32.2</td><td>67.7</td><td>72.6</td><td>77.0</td><td>42.5</td><td><u>71.8</u></td><td>49.1</td><td>61.9</td><td>90.8</td><td>62.8</td></tr>
+                            <tr><td>DWL</td><td>33.8</td><td><u>68.2</u></td><td>72.3</td><td>76.1</td><td>43.2</td><td>57.9</td><td>48.2</td><td><u>70.7</u></td><td><b>91.9</b></td><td><u>63.6</u></td></tr>
+                            <tr><td>MUCA</td><td>33.7</td><td><b>69.3</b></td><td><b>72.9</b></td><td>76.9</td><td><b>46.2</b></td><td>40.4</td><td><b>49.9</b></td><td>55.6</td><td>89.2</td><td>59.3</td></tr>
+                            <tr class="highlight-row"><td>Co2S (Ours)</td><td><u>36.0</u></td><td>67.7</td><td>71.8</td><td><b>77.8</b></td><td><b>45.5</b></td><td><b>77.0</b></td><td><u>49.2</u></td><td><b>76.7</b></td><td><u>91.7</u></td><td><b>65.9</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Tab Content: GID-15 (Table VI) ================= -->
+        <div id="gid" class="dataset-content">
+            <div class="tab-caption">Table VI: Segmentation results (mIoU %) on GID-15 dataset.</div>
+            <div class="table-wrapper">
+                <!-- 注意：为了版面统一，我将原图的横向表格转置为纵向列表 -->
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>1/8</th>
+                            <th>1/4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>OnlySup</td><td>67.5</td><td>74.1</td></tr>
+                        <tr><td>FixMatch</td><td>70.0</td><td>74.8</td></tr>
+                        <tr><td>U2PL</td><td>67.2</td><td>75.3</td></tr>
+                        <tr><td>WSCL</td><td>72.8</td><td>75.4</td></tr>
+                        <tr><td>UniMatch</td><td><u>73.9</u></td><td>75.9</td></tr>
+                        <tr><td>DWL</td><td>72.6</td><td><u>76.9</u></td></tr>
+                        <tr><td>MUCA</td><td>67.4</td><td>72.6</td></tr>
+                        <tr class="highlight-row">
+                            <td>Co2S (Ours)</td>
+                            <td><b>75.4</b></td>
+                            <td><b>77.7</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div> <!-- End Container -->
+</div> <!-- End Section -->
+
+
+    <!-- Carousel Section (轮播图区域) -->
+    <div class="section carousel-section" id="results">
+        <h2 style="text-align: center; margin-bottom: 10px;">Visual Comparisons & Qualitative Results</h2>
+        <p style="text-align: center; color: #5f6368; margin-bottom: 30px;">Swipe to view results across different datasets</p>
+        
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                
+                <!-- Slide 1: WHDLD (DINO) -->
+                <div class="carousel-slide">
+                    <!-- 添加 zoom-trigger 类以启用放大功能 -->
+                    <div class="zoom-trigger">
+                        <img src="static/image/whdld_vis.png" alt="Visual Comparison WHDLD">
+                    </div>
+                    <div class="carousel-caption">Visual Comparison WHDLD Dataset</div>
+                </div>
+
+                <!-- Slide 2: LoveDA -->
+                <div class="carousel-slide">
+                    <div class="zoom-trigger">
+                        <img src="static/image/loveda_vis.png" alt="Visual Comparison LoveDA">
+                    </div>
+                    <div class="carousel-caption">Visual Comparison on LoveDA Dataset</div>
+                </div>
+
+                <!-- Slide 3: MER -->
+                <div class="carousel-slide">
+                    <div class="zoom-trigger">
+                        <img src="static/image/mer_vis.png" alt="Visual Comparison MER">
+                    </div>
+                    <div class="carousel-caption">Visual Comparison MER Dataset</div>
+                </div>
+
+                <!-- Slide 4: MSL -->
+                <div class="carousel-slide">
+                    <div class="zoom-trigger">
+                        <img src="static/image/msl_vis.png" alt="Visual Comparison MSL">
+                    </div>
+                    <div class="carousel-caption">Visual Comparison MSL Dataset</div>
+                </div>
+
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button class="carousel-btn prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fas fa-chevron-right"></i></button>
+
+            <!-- Dots -->
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BibTeX -->
+    <div class="section" id="citation">
+        <h2 style="text-align: center; margin-bottom: 20px;">Citation</h2>
+        <div style="position: relative; max-width: 800px; margin: 0 auto;">
+            <bibtex>
+@article{Co2S,
+  title={Toward Stable Semi-Supervised Remote Sensing Segmentation via Co-Guidance and Co-Fusion},
+  author={Zhou, Yi and Zou, Xuechao and Zhang, Shun and Li, Kai and Wang, Shiying and Chen, Jingming and Lang, Congyan and Cao, Tengfei and Tao, Pin and Shi, Yuanchun},
+  year={2025},
+}
+            </bibtex>
+            <button class="copy-btn">Copy</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-col">
+                <div class="footer-title">Acknowledgment</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">
+                    This work was supported by the Qinghai Province "Kunlun Talent" High-end Innovative and Entrepreneurial Talent program.
+                </p>
+            </div>
+            <div class="footer-col" style="text-align: right;">
+                <div class="footer-title">About</div>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">
+                    © 2025 Co2S Project.
+                </p>
+                <p style="font-size: 0.85rem; color: #9aa0a6;">
+                    Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io" class="footer-link">Nerfies</a>.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<!-- External JavaScript -->
+<script src="static/js/script.js"></script>
+
+<!-- 内部 JS：处理 Tab 切换 -->
+<script>
+    function openTab(evt, tabName) {
+        // 1. 获取所有内容块并隐藏
+        var tabContent = document.getElementsByClassName("tab-content");
+        for (var i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
+            tabContent[i].classList.remove("active");
+        }
+
+        // 2. 获取所有按钮并移除 active 类
+        var tabLinks = document.getElementsByClassName("tab-btn");
+        for (var i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+        }
+
+        // 3. 显示当前内容并添加 active 类
+        document.getElementById(tabName).style.display = "block";
+        // 这里加一个小延时触发 CSS 动画
+        setTimeout(function(){
+            document.getElementById(tabName).classList.add("active");
+        }, 10);
+        
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
