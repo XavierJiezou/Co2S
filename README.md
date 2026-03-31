@@ -249,3 +249,19 @@ The sample visualization results are as follows:
     </td>
   </tr>
 </table>
+
+## Citation
+
+If you use our code or models in your research, please cite with:
+
+```latex
+@ARTICLE{co2s,
+  author={Zhou, Yi and Zou, Xuechao and Zhang, Shun and Li, Kai and Wang, Shiying and Chen, Jingming and Lang, Congyan and Cao, Tengfei and Tao, Pin and Shi, Yuanchun},
+  journal={IEEE Transactions on Geoscience and Remote Sensing}, 
+  title={Toward Stable Semi-Supervised Remote Sensing Segmentation via Co-Guidance and Co-Fusion}, 
+  year={2026},
+  volume={},
+  number={},
+  pages={1-14}
+}
+```
