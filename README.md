@@ -2,7 +2,7 @@
 
 <img src="tools/docs/logo.png" alt="Co2S Logo" width="180" />
 
-# Co2S
+# [TGRS 2026] Co2S
 
 Toward Stable Semi-Supervised Remote Sensing Segmentation via Co-Guidance and Co-Fusion
 
