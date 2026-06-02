@@ -10,6 +10,8 @@ Toward Stable Semi-Supervised Remote Sensing Segmentation via Co-Guidance and Co
 [![IEEE Xplore](https://img.shields.io/badge/IEEE%20Xplore-11473311-00629B.svg)](https://ieeexplore.ieee.org/abstract/document/11473311/)
 [![Project Page](https://img.shields.io/badge/Project%20Page-Co2S-blue)](https://xavierjiezou.github.io/Co2S/)
 
+> **Note:** We recommend reading the IEEE Xplore paper version instead of the arXiv preprint. The arXiv paper is not the final version, while the IEEE version is revised based on reviewer feedback.
+
 [![HuggingFace Models](https://img.shields.io/badge/🤗HuggingFace-Models-green)](https://huggingface.co/XavierJiezou/co2s-models)
 [![HuggingFace Datasets](https://img.shields.io/badge/🤗HuggingFace-Datasets-orange)](https://huggingface.co/datasets/XavierJiezou/co2s-datasets)
 [![HuggingFace Papers](https://img.shields.io/badge/🤗%20HuggingFace-Papers-yellow)](https://huggingface.co/papers/2512.23035)
