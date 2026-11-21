@@ -310,6 +310,7 @@ if __name__ == '__main__':
 
             pred_clip_s1, pred_clip_s2 = model_clip(torch.cat((img_s1, img_s2))).chunk(2)
 
+            pred_clip_w_student = pred_clip_w
             pred_clip_w = pred_clip_w.detach()
             conf_clip_w, mask_clip_w = pred_clip_w.softmax(dim=1).max(dim=1)
 
@@ -369,6 +370,7 @@ if __name__ == '__main__':
 
             pred_dinov3_s1, pred_dinov3_s2 = model_dinov3(torch.cat((img_s1, img_s2))).chunk(2)
 
+            pred_dinov3_w_student = pred_dinov3_w
             pred_dinov3_w = pred_dinov3_w.detach()
             conf_dinov3_w, mask_dinov3_w = pred_dinov3_w.softmax(dim=1).max(dim=1)
 
@@ -444,16 +446,16 @@ if __name__ == '__main__':
             # CLIP is student: learns from DINOv3
             clip_student_mask_4d = clip_student_mask.unsqueeze(1).float()  # [B,1,H,W]
             loss_stab_clip = softmax_mse_loss_masked(
-                student_logits=pred_clip_w,          # CLIP logits
-                teacher_logits=pred_dinov3_w.detach(), # DINOv3 logits (detached)
+                student_logits=pred_clip_w_student,
+                teacher_logits=pred_dinov3_w,
                 mask=clip_student_mask_4d
             ) * stabilization_weight
 
             # DINOv3 is student: learns from CLIP
             dino_student_mask_4d = dino_student_mask.unsqueeze(1).float()  # [B,1,H,W]
             loss_stab_dinov3 = softmax_mse_loss_masked(
-                student_logits=pred_dinov3_w,        # DINOv3 logits
-                teacher_logits=pred_clip_w.detach(), # CLIP logits (detached)
+                student_logits=pred_dinov3_w_student,
+                teacher_logits=pred_clip_w,
                 mask=dino_student_mask_4d
             ) * stabilization_weight
 
